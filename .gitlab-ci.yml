@@ -4,7 +4,8 @@ release:
   script:
     - |
       env | sort
-      echo "both_1: $both_1"
-      echo "masked_1: $masked_1"
-      echo "protected_1: $protected_1"
-      echo "regular_1: $regular_1"
+      echo variables:
+      echo "both_1: [$both_1]"
+      echo "masked_1: [$masked_1]"
+      echo "protected_1: [$protected_1]"
+      echo "regular_1: [$regular_1]"
