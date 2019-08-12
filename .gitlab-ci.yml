@@ -1,7 +1,7 @@
 image: alpine:3.10.1
 
 variables:
-  API_REPOSITORY_URI=https://api.github.com/nishidayuya/test_201908_1
+  API_REPOSITORY_URI: https://api.github.com/nishidayuya/test_201908_1
 
 release:
   script:
