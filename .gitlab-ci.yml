@@ -12,7 +12,9 @@ release:
       echo "masked_1: [$masked_1]"
       echo "protected_1: [$protected_1]"
       echo "regular_1: [$regular_1]"
+    - apk add --no-cache curl
     - |
+      set -eux
       assets_url=$(
         curl --request POST \
           --header "Authorization: token $RELEASE_TOKEN" \
