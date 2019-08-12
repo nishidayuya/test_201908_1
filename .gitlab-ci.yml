@@ -1,5 +1,8 @@
 image: alpine:3.10.1
 
+variables:
+  API_REPOSITORY_URI=https://api.github.com/nishidayuya/test_201908_1
+
 release:
   script:
     - |
@@ -9,3 +12,14 @@ release:
       echo "masked_1: [$masked_1]"
       echo "protected_1: [$protected_1]"
       echo "regular_1: [$regular_1]"
+    - |
+      assets_url=$(
+        curl --request POST \
+          --header "Authorization: token $RELEASE_TOKEN" \
+          --data '{"tag_name": "v1.0.0"}' \
+          "$API_REPOSITORY_URI"/releases
+      )
+      curl --request POST \
+        --header "Authorization: token $RELEASE_TOKEN" \
+        --upload-file a.txt \
+        "$assets_url?name=a.txt"
