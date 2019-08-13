@@ -28,13 +28,14 @@ release:
       echo "regular_1: [$regular_1]"
     - |
       set -eux
-      apk add --no-cache curl jq tzdata
+      apk add --no-cache curl jq tzdata git
       #tag_name=$(date +v1.%Y%m%d.%H%M)
       tag_name=$CI_COMMIT_TAG
+      commit_id=$CI_COMMIT_SHA
       assets_url=$(
         curl --request POST \
           --header "Authorization: token $RELEASE_TOKEN" \
-          --data '{"tag_name": "'$tag_name'","target_commitish": "'$tag_name'"}' \
+          --data '{"tag_name": "'$tag_name'","target_commitish": "'$commit_id'"}' \
           "$API_REPOSITORY_URI"/releases |
         jq '.upload_url | sub("{.*"; "")' |
         sed -e 's/"//g'
