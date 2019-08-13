@@ -1,0 +1,47 @@
+# https://developer.github.com/v3/#current-version
+# https://developer.github.com/v3/repos/releases/#create-a-release
+# https://docs.gitlab.com/ce/ci/variables/predefined_variables.html
+
+image: alpine:3.10.1
+
+variables:
+  TZ: Asia/Tokyo
+  API_REPOSITORY_URI: https://api.github.com/repos/nishidayuya/test_201908_1
+
+test:
+  script:
+    - |
+      date -Iseconds
+
+release:
+  only:
+    variables:
+      - $CI_COMMIT_TAG
+  script:
+    - |
+      set -eux
+      env | sort
+      echo variables:
+      echo "both_1: [$both_1]"
+      echo "masked_1: [$masked_1]"
+      echo "protected_1: [$protected_1]"
+      echo "regular_1: [$regular_1]"
+    - |
+      set -eux
+      apk add --no-cache curl jq tzdata
+      #tag_name=$(date +v1.%Y%m%d.%H%M)
+      tag_name=$CI_COMMIT_TAG
+      assets_url=$(
+        curl --request POST \
+          --header "Authorization: token $RELEASE_TOKEN" \
+          --data '{"tag_name": "'$tag_name'","target_commitish": "'$tag_name'"}' \
+          "$API_REPOSITORY_URI"/releases |
+        jq '.upload_url | sub("{.*"; "")' |
+        sed -e 's/"//g'
+      )
+      curl --request POST \
+        --header "Authorization: token $RELEASE_TOKEN" \
+        --header "Content-Type: text/plain" \
+        --upload-file a.txt \
+        "$assets_url?name=a.txt" |
+      jq .
